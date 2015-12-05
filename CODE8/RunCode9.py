@@ -57,14 +57,20 @@ if __name__ == '__main__':
     '''
     numOfIterations = 2
     numOfDecisions=[10]
-    numOfObjectives=[2,4,6,8]
+    numOfObjectives=[2,4]
+    
+    #numOfModels = 2
+    #rdivlength = len(numOfDecisions) * len(numOfObjectives) * len(numOfModels)
+    
+    #rdivInput = [[]*rdivlength]
+    #rdivIndex = 0
     
     solutions={}
     TotalRounds = len(numOfDecisions) * len(numOfObjectives) * numOfIterations
     fname = "./data/OUTPUT-RAWDATA.txt"
     ouputRawFile = open(fname, "wb") 
     
-    for model in [DTLZ1,DTLZ7]:
+    for model in [DTLZ7]:
         ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
         mod = ( "Model    : %s " %model.__name__)
         ouputRawFile.write(mod+'\n')

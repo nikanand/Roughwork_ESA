@@ -49,6 +49,17 @@ def crossover(child,Parent1,Parent2):
 def gt(x,y): return x > y
 def lt(x,y): return x < y 
 
+"Check Binary Domination"
+#type 1
+def binaryDomination(model1, model2):
+    bettered = False
+    for i,(xi,yi) in enumerate(zip(model1.getObjectives(),model2.getObjectives())):
+        if lt(xi,yi):
+            bettered = True
+        elif (xi != yi):
+            return False # not better and not equal, therefor worse
+    return bettered
+    
 "Update pereto frontier"
 
 def compete(pf_best,pf_new):
@@ -71,39 +82,17 @@ def type2(list1, list2):
         return -1
     else:
         return 5
-
         
-"Check Binary Domination"
-def binaryDomination(Parent1,Parent2):
-    try:
-        obj_a=Parent1.getObjectives()
-    except:
-        obj_a=Parent1
-    try:
-        obj_b=Parent2.getObjectives()
-    except:
-        obj_b=Parent2
-    if obj_a==obj_b:
+"True if samples dominated by the front"
+def Dominates(pfPoint,someObjectives):
+    pfObjectives=pfPoint.getObjectives()
+    if pfObjectives==someObjectives:
         return False
-    for i in xrange(Parent1.objectives):
-        if obj_b[i]<obj_a[i]:
+    for i in xrange(pfPoint.objectives):
+        if someObjectives[i]<pfObjectives[i]:
             return False
     return True
 
-    
-def type1(model1, model2):
-    bettered = False
-    for i,(xi,yi) in enumerate(zip(model1.getObjectives(),model2.getObjectives())):
-        if lt(xi,yi):
-            bettered = True
-        elif (xi != yi): 
-            return False # not better and not equal, therefor worse
-    return bettered
-
-    
-
-    
-    
 '''
 Approximates the hypervolume of a Pareto frontier. First, it generates 
 random samples in the hypercuboid defined by the utopia and antiutopia 
@@ -130,19 +119,14 @@ REFERENCE: https://books.google.com/books?id=6K3zflc_bNkC&pg=PA138&lpg=PA138&dq=
 '''
 def hypervolume(paretoFront,min,max,sample=10000):
     count=0.0    
-    #print "!!!!!!! Number of solutions in paretoFront = ",len(paretoFront)
     m=paretoFront[0].objectives
     for i in xrange(sample):
-        #print "Sample number",i
-        #print "!!!!!!! len: min =",len(min)," max =",len(max)
-        #someValue=[random.uniform(min[k],max[k]) for k in xrange(m)]
-        
-        someValue = []
+        someObjectives = []
         for i in xrange(m):
-            someValue.append(random.uniform(min[i],max[i]))
+            someObjectives.append(random.uniform(min[i],max[i]))
 
-        for value in paretoFront:
-             if binaryDomination(value,someValue):
+        for pfPoint in paretoFront:
+            if Dominates(pfPoint,someObjectives):
                  count=count+1
 
     return float(count/(sample))
