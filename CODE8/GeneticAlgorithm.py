@@ -76,26 +76,30 @@ def type1(model1, model2):
 
 def compete(pf_best,pf_new):
     tmp=[]
-    
+    '''
+    print "Points in Pareto Frontier pf_best     = ",len(pf_best)
     for m in pf_best:
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
         print "###","onj=",m.getObjectives()
         print "###","dec=",m.x
         print "###","enf=",m.eval()
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
+    print "Points in Pareto Frontier pf_new     = ",len(pf_new)
     for m in pf_new:
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
         print "###","onj=",m.getObjectives()
         print "###","dec=",m.x
         print "###","enf=",m.eval()
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
-    
+    '''
     for a in pf_new:
         for b in pf_best:
             if binaryDomination(a,b):
-                tmp.append(a)
-                pf_best.remove(b)
-    '''           
+                if a not in tmp:
+                    tmp.append(a)
+                    pf_best.remove(b)
+
+    '''        
     print "Points in Pareto Frontier tmp     = ", len(tmp)
     for m in tmp:
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TMP"
@@ -111,13 +115,13 @@ def compete(pf_best,pf_new):
         print "%%%%%k=","dec=",m.x
         print "%%%%%k=","enf=",m.eval()
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEST"
-    '''  
+    '''
     if tmp:
         pf_best.extend(tmp)
-        print "TMP TRUE"
+        #print "TMP TRUE"
         return True
     else:
-        print "TMP FALSE"
+        #print "TMP FALSE"
         return False
         
         
@@ -244,9 +248,9 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
             print "###","enf=",m.eval()
             print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
         '''
-        print "NI", len(pf_best)    
+        #print "NI", len(pf_best)    
         change=compete(pf_best,pf_new)
-        print "KH", len(pf_best)  
+        #print "KH", len(pf_best)  
         '''
         for m in pf_best:
             print "%%%%%k=","onj=",m.getObjectives()

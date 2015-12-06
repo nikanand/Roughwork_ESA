@@ -193,6 +193,7 @@ if __name__ == '__main__':
                     HV =[]
                     nPF=[]
                     PF =[]
+                    
                     PFobj=[]
                     PFdec=[]
                     PFeng=[]
@@ -218,11 +219,11 @@ if __name__ == '__main__':
                         HV.append(HyperVolume)
                         nPF.append(len(paretoFront))
                         PF.append(paretoFront)
-                        
+                        '''
                         objList=[]
                         decList=[]
                         engList=[]
-                        '''
+
                         for m in paretoFront:
                           objList.append(m.getObjectives())
                           print "$$$$$k=",k,"onj=",m.getObjectives()
@@ -230,10 +231,11 @@ if __name__ == '__main__':
                           print "$$$$$k=",k,"dec=",m.x
                           engList.append(m.eval())
                           print "$$$$$k=",k,"enf=",m.eval()
-                        '''  
+                          
                         PFobj.append(objList)
                         PFdec.append(decList)
                         PFeng.append(engList)
+                        '''
                         print "!!!!!!"
                        
                         i += 1
@@ -244,11 +246,11 @@ if __name__ == '__main__':
                     print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
                     print "HyperVolume= ",HV
                     print "Points in pareto Frontier = ",nPF
-                    print "List of Decisions in pareto Frontier =",PFdec
-                    print "List of Objectives in pareto Frontier =",PFobj
-                    print "List of Energy in pareto Frontier =",PFeng
+                    #print "List of Decisions in pareto Frontier =",PFdec
+                    #print "List of Objectives in pareto Frontier =",PFobj
+                    #print "List of Energy in pareto Frontier =",PFeng
                         
-                    #CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
+                    CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
         ################################    
                     '''
                     ##Print data for this Decision/objective pair
