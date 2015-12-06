@@ -14,7 +14,6 @@ random.seed(initSeed)
 #####################
 
 def Dumpfile(paretoFront,stime):
-    print '----Time Estimate----'
     for i in range(len(paretoFront)):
         xTable = PrettyTable()
         sNo = range(1,paretoFront[i].N + 1)
@@ -39,14 +38,11 @@ def Dumpfile(paretoFront,stime):
         except:
             print "somthing went wrong while writting in FILE: ",fname
     time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print "Start Time = ", stime
-    print "End Time   = ", time
-    ouputRawFile.write( '________________________________\n' ) 
+    ouputRawFile.write( '_________Time Estimate___________\n' ) 
     ouputRawFile.write( 'Start Time = ' +  stime + '\n' )
     ouputRawFile.write( 'End Time   = ' +  time + '\n' )
     ouputRawFile.write( 'Number of values in paretoFrontier = ' + repr(len(paretoFront)) + '\n' )
-    ouputRawFile.write( '________________________________\n' ) 
-
+    ouputRawFile.write( '_________________________________\n' ) 
     print "###########################################"
  
 def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
@@ -57,6 +53,11 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
     fo.write('Algorith : '+ Algorithm.__name__ + '\n')
     fo.write('Model    : '+ model.__name__ + '\n')
     fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
+    fo.write('Decision,Objectives,Energy of all Pareto Values Per Iteration\n')                    
+    fo.write('``````````````````````````````````````````````````````````````````````\n')
+    fo.write('Number of Decisions  = '+str(decisions) +'\n')
+    fo.write('Number of Objectives = '+str(objectives) +'\n')
+    fo.write('``````````````````````````````````````````````````````````````````````\n')
     fo.write('HyperVolume Per Iteration\n')
     hvTable = PrettyTable()
     sNo = range(1,numOfIterations + 1)
@@ -66,19 +67,13 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
     fo.write( str(hvTable) + '\n' )
     fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
     ##########
-    fo.write('Decision,Objectives,Energy of all Pareto Values Per Iteration\n')                    
-    fo.write('```````````````````````````````````````````````````````````````\n')
-    fo.write('Number of Decisions  = '+str(decisions) +'\n')
-    fo.write('Number of Objectives = '+str(objectives) +'\n')
-    fo.write('```````````````````````````````````````````````````````````````\n')
-
+    
     xTable  = PrettyTable()
     fxTable = PrettyTable()
     eTable  = PrettyTable()
 
     count = 0
     for i in range(len(PF)):
-        fo.write('```````````````````````````````````````````````````````````````\n')
         fo.write('_______________________________________________________________\n')
         fo.write('ITERATION = '+str(i+1)+'\n')
         fo.write('_______________________________________________________________\n')
@@ -139,7 +134,7 @@ if __name__ == '__main__':
     
     HyperCollection={}
     TotalRounds = len(numOfDecisions) * len(numOfObjectives) * numOfIterations
-    fname = "./data/RAW_output_dump_with_timeDetails.txt"
+    fname = "./data/LOG_output_dump.log"
     ouputRawFile = open(fname, "wb") 
     
     for model in [DTLZ7]:
@@ -163,7 +158,6 @@ if __name__ == '__main__':
             for objectives in numOfObjectives:
                 print "\nStarting processing for number of objectives  =", objectives
 
-                #HyperCollection[model.__name__][objectives]={}
                 for decisions in numOfDecisions:
                     print "\nStarting processing with number of decisions = " ,decisions
                     
@@ -173,22 +167,15 @@ if __name__ == '__main__':
                     ouputRawFile.write( 'Number of objectives : ' + repr(objectives) + '\n' ) 
                     ouputRawFile.write( 'Number of decisions  : ' + repr(decisions) + '\n' ) 
                     ouputRawFile.write( '*********************************\n' ) 
-                    
-                    print '\n*********************************'
-                    print "Start Time = ", time
-                    print '*********************************\n'
 
-                    #HyperCollection[model.__name__][objectives][decisions]=[]
                     i = 1
                     HV =[]
                     nPF=[]
                     PF =[]
                     
                     for k in xrange(numOfIterations):
-                        
                         ouputRawFile.write( '================================\n' ) 
                         stime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                        print "ITERATION NUMBER : ", i
                         ouputRawFile.write( 'ITERATION NUMBER = ' + repr(i) + '\n' )
 
                         DifferentSeeds=random.randint(0,10000)
@@ -199,15 +186,11 @@ if __name__ == '__main__':
        
                         progress = (float(perc)/TotalRounds)*100.0
                         print "\nprocessing: %6.2f" %progress,"% Complete...........\n"
-                        #HyperCollection[model.__name__][objectives][decisions].append(HyperVolume)
-                        
+
                         ##Collect data for this Decision/objective pair
                         HV.append(HyperVolume)
                         nPF.append(len(paretoFront))
                         PF.append(paretoFront)
-                        
-                        print "!!!!!!"
-                       
                         i += 1
                         perc +=1
                     
@@ -218,13 +201,8 @@ if __name__ == '__main__':
                     print "HyperVolume= ",HV
 
                     CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
-        ################################    
-        
+
             print "----------------------------------------------------------------"
             print "Processing 100% Complete for model: ",model.__name__,"!!!!"
             print "----------------------------------------------------------------"
-            
-
-            ####################
-
     ouputRawFile.close()  # Close opend file  

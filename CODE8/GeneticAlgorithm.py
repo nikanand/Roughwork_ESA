@@ -56,72 +56,22 @@ def binaryDomination(model1, model2):
         elif (xi != yi):
             return False # not better and not equal, therefor worse
     return bettered
-    
-    
-def type1(model1, model2):
-    bettered = False
-    for i,(xi,yi) in enumerate(zip(model1.getObjectives(),model2.getObjectives())):
-        if lt(xi,yi):
-            bettered = True
-        elif (xi != yi):
-            print "bettered  FALSE"
-            return False # not better and not equal, therefor worse
-    if bettered:
-        print "bettered  TRUE"
-    else:
-        print "bettered  FALSE"
-    return bettered
-    
-"Update pereto frontier"
 
-def compete(pf_best,pf_new):
-    tmp=[]
-    '''
-    print "Points in Pareto Frontier pf_best     = ",len(pf_best)
-    for m in pf_best:
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
-        print "###","onj=",m.getObjectives()
-        print "###","dec=",m.x
-        print "###","enf=",m.eval()
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
-    print "Points in Pareto Frontier pf_new     = ",len(pf_new)
-    for m in pf_new:
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
-        print "###","onj=",m.getObjectives()
-        print "###","dec=",m.x
-        print "###","enf=",m.eval()
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
-    '''
-    for a in pf_new:
-        for b in pf_best:
-            if binaryDomination(a,b):
-                if a not in tmp:
-                    tmp.append(a)
-                    pf_best.remove(b)
+"Update pareto frontier"
+#type2
+def updateParetoFrontier(bestPF,newPF):
+    tmpCandList=[]
+    for cand1 in newPF:
+        for cand2 in bestPF:
+            if binaryDomination(cand1,cand2):
+                if cand1 not in tmpCandList:
+                    tmpCandList.append(cand1)
+                    bestPF.remove(cand2)
 
-    '''        
-    print "Points in Pareto Frontier tmp     = ", len(tmp)
-    for m in tmp:
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TMP"
-        print "###","onj=",m.getObjectives()
-        print "###","dec=",m.x
-        print "###","enf=",m.eval()
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TMP"
-    
-    print "Points in Pareto Frontier pf_best = ", len(pf_best)
-    for m in pf_best:
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEST"
-        print "%%%%%k=","onj=",m.getObjectives()
-        print "%%%%%k=","dec=",m.x
-        print "%%%%%k=","enf=",m.eval()
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEST"
-    '''
-    if tmp:
-        pf_best.extend(tmp)
-        #print "TMP TRUE"
+    if tmpCandList:
+        bestPF.extend(tmpCandList)
         return True
     else:
-        #print "TMP FALSE"
         return False
         
         
@@ -187,7 +137,7 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
     listOfCandidates=[model(objectives,decisions) for _ in xrange(candidates)]
 
     
-    pf=[]
+    PF=[]
     for cand1 in listOfCandidates:
         flag=True
         for cand2 in listOfCandidates:
@@ -195,84 +145,44 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
                 flag=False
                 break
         if flag:
-            pf.append(cand1)
-    pf_best=pf[:]
+            PF.append(cand1)
+    bestPF=PF[:]
 
-    '''
-    print "Points in Pareto Frontier = ", len(pf_best)
-    for m in pf_best:
-        print "%%%%%k=","onj=",m.getObjectives()
-        print "%%%%%k=","dec=",m.x
-        print "%%%%%k=","enf=",m.eval()
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    '''
     
     life=0
     for i in xrange(generations):
-        can_new=[]
+        newCandidateList=[]
         for j in xrange(candidates):
             child=model(objectives,decisions)
-            choose=numpy.random.choice(len(pf),2,replace=True)
-            Parent1=pf[choose[0]]
-            Parent2=pf[choose[1]]
+            choose=numpy.random.choice(len(PF),2,replace=True)
+            Parent1=PF[choose[0]]
+            Parent2=PF[choose[1]]
             child = crossover(child,Parent1,Parent2) #"Genetically Crossover parents"
 
             if random.random()<mutation_rate*(2**life):
                 child.setDecisions() #Genetically mutate child
-            can_new.append(child)
+            newCandidateList.append(child)
             
-        pf_new=[]
-        for a in listOfCandidates:
+        newPF=[]
+        for cand1 in listOfCandidates:
             flag=True
-            for b in listOfCandidates:
-                if binaryDomination(b,a):
+            for cand2 in listOfCandidates:
+                if binaryDomination(cand2,cand1):
                     flag=False
                     break
             if flag:
-                pf_new.append(a)
-        '''        
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%starting"
-        print "NUMBER Points in Pareto Frontier ORIG = ", len(pf_best)
-        for m in pf_best:
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
-            print "###","onj=",m.getObjectives()
-            print "###","dec=",m.x
-            print "###","enf=",m.eval()
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
-        print "NUMBER Points in Pareto Frontier NEW= ", len(pf_new)
-        for m in pf_new:
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
-            print "###","onj=",m.getObjectives()
-            print "###","dec=",m.x
-            print "###","enf=",m.eval()
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
-        '''
-        #print "NI", len(pf_best)    
-        change=compete(pf_best,pf_new)
-        #print "KH", len(pf_best)  
-        '''
-        for m in pf_best:
-            print "%%%%%k=","onj=",m.getObjectives()
-            print "%%%%%k=","dec=",m.x
-            print "%%%%%k=","enf=",m.eval()
-            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%UPDATE"
-        '''    
-        if change:
+                newPF.append(cand1)
+            
+        updated=updateParetoFrontier(bestPF,newPF)
+        if updated:
             life=0
         else:
             life=life+1
         if life==lives:
             break
 
-        listOfCandidates=can_new
-        pf=pf_new
+        listOfCandidates=newCandidateList
+        pf=newPF
     
-    solution = hypervolume(pf_best,min,max,10000)
-    '''
-    print "Points in Pareto Frontier = ", len(pf_best)
-    for m in pf_best:
-        print "%%%%%k=","onj=",m.getObjectives()
-        print "%%%%%k=","dec=",m.x
-        print "%%%%%k=","enf=",m.eval()
-    ''' 
-    return pf_best,solution
+    HyperVolume = hypervolume(bestPF,min,max,10000)
+    return bestPF,HyperVolume
