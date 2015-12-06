@@ -197,7 +197,6 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
         if flag:
             pf.append(cand1)
     pf_best=pf[:]
-    print "##################Points in Pareto Frontier = ", len(pf_best)
 
     '''
     print "Points in Pareto Frontier = ", len(pf_best)

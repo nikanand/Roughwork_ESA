@@ -9,8 +9,8 @@ from time import gmtime, strftime
 
 #####################
 import random
-#initSeed = 30
-#random.seed(initSeed)
+initSeed = 30
+random.seed(initSeed)
 #####################
 
 def Dumpfile(paretoFront,stime):
@@ -50,12 +50,8 @@ def Dumpfile(paretoFront,stime):
     print "###########################################"
  
 def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
-    #####################
     ##Print data for this Decision/objective pair
     print "----------------------------------------------------------------"
-    print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
-    print "List of Points in pareto Frontier in each iteration = ",nPF
-                    
     fname = ('./data/'+model.__name__+'_'+str(decisions)+'Dec_and_'+str(objectives)+'Obj.txt')
     fo = open(fname, "wb")
     fo.write('Algorith : '+ Algorithm.__name__ + '\n')
@@ -66,7 +62,7 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
     sNo = range(1,numOfIterations + 1)
     hvTable.add_column("Iteration  ",sNo)
     hvTable.add_column("HyperVolume",HV)
-    print hvTable
+    #print hvTable
     fo.write( str(hvTable) + '\n' )
     fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
     ##########
@@ -85,37 +81,37 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
         fo.write('```````````````````````````````````````````````````````````````\n')
         fo.write('_______________________________________________________________\n')
         fo.write('ITERATION = '+str(i+1)+'\n')
+        fo.write('_______________________________________________________________\n')
 
         for j in  range(len(PF[i])):
-            heading = 'Desisions, x     [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] '
+            heading = 'Dec, x    [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
             xTable.add_column(heading,PF[i][j].x)
-            heading = 'Objectives, f(x) [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
+            heading = 'Obj, f(x) [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
             fxTable.add_column(heading,PF[i][j].getObjectives())
-            heading = ' Energy          [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
+            heading = ' Energy   [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
             val = [repr(PF[i][j].eval())]
             eTable.add_column(heading,val)
-            #heading = 'ITERATION: '+str(i+1)+' PF: '+str(j+1)+' Energy'
-            #eTable.add_column(heading,PF[i][j].eval())
             count+=1
             if count == 3:
                 count = 0
-                print xTable
-                print fxTable
-                print eTable
+                #print xTable
+                #print fxTable
+                #print eTable
                 fo.write('DECISIONS\n')
                 fo.write( str(xTable) + '\n' )
                 fo.write('OBJECTIVES\n')
                 fo.write( str(fxTable) + '\n' )
                 fo.write('ENERGY\n')
                 fo.write( str(eTable) + '\n' )
+                fo.write( '\n#########################################################################################################################\n')
 
                 xTable  = PrettyTable()
                 fxTable = PrettyTable()
                 eTable  = PrettyTable()
         if count >0:            
-            print xTable
-            print fxTable
-            print eTable
+            #print xTable
+            #print fxTable
+            #print eTable
             fo.write( str(xTable) + '\n' )
             fo.write( str(fxTable) + '\n' )
             fo.write( str(eTable) + '\n' )
@@ -165,11 +161,11 @@ if __name__ == '__main__':
             print "Number of Iterations : " ,numOfIterations
             perc = 1.0
             for objectives in numOfObjectives:
-                print "Starting processing with number of objectives =", objectives
+                print "\nStarting processing for number of objectives  =", objectives
 
                 #HyperCollection[model.__name__][objectives]={}
                 for decisions in numOfDecisions:
-                    print "Starting processing with number of decisions = " ,decisions
+                    print "\nStarting processing with number of decisions = " ,decisions
                     
                     time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                     ouputRawFile.write( '*********************************\n' ) 
@@ -188,10 +184,6 @@ if __name__ == '__main__':
                     nPF=[]
                     PF =[]
                     
-                    PFobj=[]
-                    PFdec=[]
-                    PFeng=[]
-                    
                     for k in xrange(numOfIterations):
                         
                         ouputRawFile.write( '================================\n' ) 
@@ -199,9 +191,9 @@ if __name__ == '__main__':
                         print "ITERATION NUMBER : ", i
                         ouputRawFile.write( 'ITERATION NUMBER = ' + repr(i) + '\n' )
 
-                        #DifferentSeeds=random.randint(0,10000)
+                        DifferentSeeds=random.randint(0,10000)
                          
-                        paretoFront,HyperVolume=Algorithm(model,decisions=decisions,objectives=objectives,someSeed=k)
+                        paretoFront,HyperVolume=Algorithm(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds)
                         Dumpfile(paretoFront,stime)
                         ouputRawFile.write( '================================\n' ) 
        
@@ -213,23 +205,7 @@ if __name__ == '__main__':
                         HV.append(HyperVolume)
                         nPF.append(len(paretoFront))
                         PF.append(paretoFront)
-                        '''
-                        objList=[]
-                        decList=[]
-                        engList=[]
-
-                        for m in paretoFront:
-                          objList.append(m.getObjectives())
-                          print "$$$$$k=",k,"onj=",m.getObjectives()
-                          decList.append(m.x)
-                          print "$$$$$k=",k,"dec=",m.x
-                          engList.append(m.eval())
-                          print "$$$$$k=",k,"enf=",m.eval()
-                          
-                        PFobj.append(objList)
-                        PFdec.append(decList)
-                        PFeng.append(engList)
-                        '''
+                        
                         print "!!!!!!"
                        
                         i += 1
@@ -238,90 +214,12 @@ if __name__ == '__main__':
                     ##Print data for this Decision/objective pair
                     print "----------------------------------------------------------------"
                     print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
+                    print "List of Points in pareto Frontier in each iteration = ",nPF
                     print "HyperVolume= ",HV
-                    print "Points in pareto Frontier = ",nPF
-                    #print "List of Decisions in pareto Frontier =",PFdec
-                    #print "List of Objectives in pareto Frontier =",PFobj
-                    #print "List of Energy in pareto Frontier =",PFeng
-                        
+
                     CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
         ################################    
-                    '''
-                    ##Print data for this Decision/objective pair
-                    print "----------------------------------------------------------------"
-                    print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
-                    print "List of Points in pareto Frontier in each iteration = ",nPF
-                    #print "List of Decisions in pareto Frontier =",PFdec
-                    #print "List of Objectives in pareto Frontier =",PFobj
-                    #print "List of Energy in pareto Frontier =",PFeng
-                    ##Filename
-                    fname = ('./data/'+model.__name__+'_'+str(decisions)+'Dec_and_'+str(objectives)+'Obj.txt')
-                    fo = open(fname, "wb")
-                    fo.write('Algorith : '+ Algorithm.__name__ + '\n')
-                    fo.write('Model    : '+ model.__name__ + '\n')
-                    fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
-                    fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
-                    fo.write('HyperVolume Per Iteration')
-                    hvTable = PrettyTable()
-                    sNo = range(1,numOfIterations + 1)
-                    hvTable.add_column("Iteration  ",sNo)
-                    hvTable.add_column("HyperVolume",HV)
-                    print hvTable
-                    fo.write( str(hvTable) + '\n' )
-                    fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
-                    fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
-                    ##########
-                    fo.write('Decision,Objectives,Energy of all Pareto Values Per Iteration')                    
-                    fo.write('```````````````````````````````````````````````````````````````\n')
-                    xTable  = PrettyTable()
-                    fxTable = PrettyTable()
-                    eTable  = PrettyTable()
-                    xsNo = range(1,decisions + 1)
-                    fxsNo = range(1,objectives + 1)
-                    
-                    
-                    count = 0
-                    for i in range(len(PF)):
-                        if count == 0:
-                            xTable.add_column("#",xsNo)
-                            fxTable.add_column("#",fxsNo)
-                            eTable.add_column("#",str(1))
-                        for j in  range(len(PF[i])):
-                            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Des, x   '
-                            xTable.add_column(heading,PF[i][j].x)
-                            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Obj, f(x)'
-                            fxTable.add_column(heading,PF[i][j].getObjectives())
-                            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Energy   '
-                            val = [repr(PF[i][j].eval())]
-                            eTable.add_column(heading,val)
-                            #heading = 'ITERATION: '+str(i+1)+' PF: '+str(j+1)+' Energy'
-                            #eTable.add_column(heading,PF[i][j].eval())
-                            count+=1
-                            if count == 3:
-                                count = 0
-                                print xTable
-                                print fxTable
-                                print eTable
-
-                                fo.write( str(xTable) + '\n' )
-                                fo.write( str(fxTable) + '\n' )
-                                fo.write( str(eTable) + '\n' )
-
-                                #print eTable
-                                xTable  = PrettyTable()
-                                fxTable = PrettyTable()
-                                eTable  = PrettyTable()
-                    if count >0:            
-                        print xTable
-                        print fxTable
-                        print eTable
-                        fo.write( str(xTable) + '\n' )
-                        fo.write( str(fxTable) + '\n' )
-                        fo.write( str(eTable) + '\n' )
-
-                    fo.close()  # Close opend file
-                    '''
-                    ##########
+        
             print "----------------------------------------------------------------"
             print "Processing 100% Complete for model: ",model.__name__,"!!!!"
             print "----------------------------------------------------------------"
