@@ -13,106 +13,6 @@ initSeed = 30
 random.seed(initSeed)
 #####################
 
-if __name__ == '__main__':
-    '''
-    numOfIterations = 20
-    numOfDecisions=[10,20,40]
-    numOfObjectives=[2,4,6,8]
-    '''
-    numOfIterations = 2
-    numOfDecisions=[10]
-    numOfObjectives=[4,2]
-    
-    numOfModels = 2
-    rdivlength = len(numOfDecisions) * len(numOfObjectives) * numOfModels
-    print rdivlength
-    rdivInput = [[] for i in range(rdivlength)]
-    rdivIndex = 0
-    
-    HyperCollection={}
-    TotalRounds = len(numOfDecisions) * len(numOfObjectives) * numOfIterations
-    fname = "./data/CODE9_output_dump.log"
-    ouputRawFile = open(fname, "wb") 
-    
-    for model in [DTLZ7,DTLZ1]:
-        
-        ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
-        mod = ( "Model    : %s " %model.__name__)
-        ouputRawFile.write(mod+'\n')
-        HyperCollection[model.__name__]={}
-        for Algorithm in [ga]:
-            algo = ("Algorithm: %s " %Algorithm.__name__)
-            ouputRawFile.write(algo)
-            time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-            print "\nStart Time = ", time 
-            ouputRawFile.write( '\nStart Time = ' +  time + '\n' ) 
-            ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
-            print "###################################################################################"
-            print mod
-            print "###################################################################################"
-            print "Number of Iterations : " ,numOfIterations
-            perc = 1.0
-            for objectives in numOfObjectives:
-                print "\nStarting processing for number of objectives  =", objectives
-
-                for decisions in numOfDecisions:
-                    print "\nStarting processing with number of decisions = " ,decisions
-                    
-                    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                    ouputRawFile.write( '*********************************\n' ) 
-                    ouputRawFile.write( 'Start Time = ' +  time + '\n' ) 
-                    ouputRawFile.write( 'Number of objectives : ' + repr(objectives) + '\n' ) 
-                    ouputRawFile.write( 'Number of decisions  : ' + repr(decisions) + '\n' ) 
-                    ouputRawFile.write( '*********************************\n' ) 
-
-                    i = 1
-                    HV =[]
-                    nPF=[]
-                    PF =[]
-                    
-                    for k in xrange(numOfIterations):
-                        ouputRawFile.write( '================================\n' ) 
-                        stime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                        ouputRawFile.write( 'ITERATION NUMBER = ' + repr(i) + '\n' )
-
-                        DifferentSeeds=random.randint(0,10000)
-                         
-                        paretoFront,HyperVolume=Algorithm(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds)
-                        Dumpfile(paretoFront,stime)
-                        ouputRawFile.write( '================================\n' ) 
-       
-                        progress = (float(perc)/TotalRounds)*100.0
-                        print "\nprocessing: %6.2f" %progress,"% Complete...........\n"
-
-                        ##Collect data for this Decision/objective pair
-                        HV.append(HyperVolume)
-                        nPF.append(len(paretoFront))
-                        PF.append(paretoFront)
-                        i += 1
-                        perc +=1
-                    
-                    ##Print data for this Decision/objective pair
-                    #print "----------------------------------------------------------------"
-                    #print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
-                    #print "List of Points in pareto Frontier in each iteration = ",nPF
-                    #print "HyperVolume= ",HV
-
-                    CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
-                    #################
-                    ID = (model.__name__+' '+str(decisions)+'Dec '+str(objectives)+' Objs') 
-
-                    rdivInput[rdivIndex].append(ID)
-                    for each in HV:
-                        rdivInput[rdivIndex].append(each)
-                    rdivIndex += 1
-                    ################
-
-            print "----------------------------------------------------------------"
-            print "Processing 100% Complete for model: ",model.__name__,"!!!!"
-            print "----------------------------------------------------------------"
-    rdivDemo(rdivInput)        
-    ouputRawFile.close()  # Close opend file  
-    
 
 
 
@@ -217,3 +117,105 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
 
     fo.close()  # Close opend file
     ##############################
+
+
+if __name__ == '__main__':
+    '''
+    numOfIterations = 20
+    numOfDecisions=[10,20,40]
+    numOfObjectives=[2,4,6,8]
+    '''
+    numOfIterations = 2
+    numOfDecisions=[10]
+    numOfObjectives=[4,2]
+    
+    numOfModels = 2
+    rdivlength = len(numOfDecisions) * len(numOfObjectives) * numOfModels
+    print rdivlength
+    rdivInput = [[] for i in range(rdivlength)]
+    rdivIndex = 0
+    
+    HyperCollection={}
+    TotalRounds = len(numOfDecisions) * len(numOfObjectives) * numOfIterations
+    fname = "./data/CODE9_output_dump.log"
+    ouputRawFile = open(fname, "wb") 
+    
+    for model in [DTLZ7,DTLZ1]:
+        
+        ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
+        mod = ( "Model    : %s " %model.__name__)
+        ouputRawFile.write(mod+'\n')
+        HyperCollection[model.__name__]={}
+        for Algorithm in [ga]:
+            algo = ("Algorithm: %s " %Algorithm.__name__)
+            ouputRawFile.write(algo)
+            time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+            print "\nStart Time = ", time 
+            ouputRawFile.write( '\nStart Time = ' +  time + '\n' ) 
+            ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
+            print "###################################################################################"
+            print mod
+            print "###################################################################################"
+            print "Number of Iterations : " ,numOfIterations
+            perc = 1.0
+            for objectives in numOfObjectives:
+                print "\nStarting processing for number of objectives  =", objectives
+
+                for decisions in numOfDecisions:
+                    print "\nStarting processing with number of decisions = " ,decisions
+                    
+                    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                    ouputRawFile.write( '*********************************\n' ) 
+                    ouputRawFile.write( 'Start Time = ' +  time + '\n' ) 
+                    ouputRawFile.write( 'Number of objectives : ' + repr(objectives) + '\n' ) 
+                    ouputRawFile.write( 'Number of decisions  : ' + repr(decisions) + '\n' ) 
+                    ouputRawFile.write( '*********************************\n' ) 
+
+                    i = 1
+                    HV =[]
+                    nPF=[]
+                    PF =[]
+                    
+                    for k in xrange(numOfIterations):
+                        ouputRawFile.write( '================================\n' ) 
+                        stime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                        ouputRawFile.write( 'ITERATION NUMBER = ' + repr(i) + '\n' )
+
+                        DifferentSeeds=random.randint(0,10000)
+                         
+                        paretoFront,HyperVolume=Algorithm(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds)
+                        Dumpfile(paretoFront,stime)
+                        ouputRawFile.write( '================================\n' ) 
+       
+                        progress = (float(perc)/TotalRounds)*100.0
+                        print "\nprocessing: %6.2f" %progress,"% Complete...........\n"
+
+                        ##Collect data for this Decision/objective pair
+                        HV.append(HyperVolume)
+                        nPF.append(len(paretoFront))
+                        PF.append(paretoFront)
+                        i += 1
+                        perc +=1
+                    
+                    ##Print data for this Decision/objective pair
+                    #print "----------------------------------------------------------------"
+                    #print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
+                    #print "List of Points in pareto Frontier in each iteration = ",nPF
+                    #print "HyperVolume= ",HV
+
+                    CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
+                    #################
+                    ID = (model.__name__+' '+str(decisions)+'Dec '+str(objectives)+' Objs') 
+
+                    rdivInput[rdivIndex].append(ID)
+                    for each in HV:
+                        rdivInput[rdivIndex].append(each)
+                    rdivIndex += 1
+                    ################
+
+            print "----------------------------------------------------------------"
+            print "Processing 100% Complete for model: ",model.__name__,"!!!!"
+            print "----------------------------------------------------------------"
+    rdivDemo(rdivInput)        
+    ouputRawFile.close()  # Close opend file  
+    
