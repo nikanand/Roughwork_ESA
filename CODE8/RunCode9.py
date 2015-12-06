@@ -54,10 +54,11 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
     fo.write('Model    : '+ model.__name__ + '\n')
     fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
     fo.write('Decision,Objectives,Energy of all Pareto Values Per Iteration\n')                    
-    fo.write('``````````````````````````````````````````````````````````````````````\n')
+    fo.write('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n')
+    fo.write('=====================================================================`\n')
     fo.write('Number of Decisions  = '+str(decisions) +'\n')
     fo.write('Number of Objectives = '+str(objectives) +'\n')
-    fo.write('``````````````````````````````````````````````````````````````````````\n')
+    fo.write('=====================================================================`\n')
     fo.write('HyperVolume Per Iteration\n')
     hvTable = PrettyTable()
     sNo = range(1,numOfIterations + 1)
@@ -74,9 +75,9 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
 
     count = 0
     for i in range(len(PF)):
-        fo.write('_______________________________________________________________\n')
+        fo.write('–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\n')
         fo.write('ITERATION = '+str(i+1)+'\n')
-        fo.write('_______________________________________________________________\n')
+        fo.write('–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\n')
 
         for j in  range(len(PF[i])):
             heading = 'Dec, x    [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
@@ -98,7 +99,7 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
                 fo.write( str(fxTable) + '\n' )
                 fo.write('ENERGY\n')
                 fo.write( str(eTable) + '\n' )
-                fo.write( '\n#########################################################################################################################\n')
+                fo.write('\n#########################################################################################################\n')
 
                 xTable  = PrettyTable()
                 fxTable = PrettyTable()
@@ -195,10 +196,10 @@ if __name__ == '__main__':
                         perc +=1
                     
                     ##Print data for this Decision/objective pair
-                    print "----------------------------------------------------------------"
-                    print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
-                    print "List of Points in pareto Frontier in each iteration = ",nPF
-                    print "HyperVolume= ",HV
+                    #print "----------------------------------------------------------------"
+                    #print "Finished processing ",model.__name__," with Decisions = ",decisions," and  Objectives = ",objectives
+                    #print "List of Points in pareto Frontier in each iteration = ",nPF
+                    #print "HyperVolume= ",HV
 
                     CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
 
