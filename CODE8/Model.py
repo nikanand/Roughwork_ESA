@@ -31,49 +31,36 @@ class Model(object):
 class DTLZ1(Model):
     def __init__(self,m=2,n=4):
         self.objectives = self.M = m # No of objectives f[0]f[1],f[2],...,f[M-1]
-        self.decisions  = self.n = n # decision variables  
-        self.K = self.n + 1 - self.M  #n -> M + K -1
-        self.domainMin = [0]*self.n
-        self.domainMax = [1]*self.n
-        self.x=[0]*self.n
+        self.decisions  = self.N = n # decision variables  
+        self.K = self.N + 1 - self.M  #n -> M + K -1
+        self.domainMin = [0]*self.N
+        self.domainMax = [1]*self.N
+        self.x=[0]*self.N
         self.setDecisions()
         self.__name__ = 'DTLZ1'
         
     def setDecisions(self):
         while True:
-            for i in range(0,self.n):
+            for i in range(0,self.N):
                 self.x[i]=random.uniform(self.domainMin[i],self.domainMax[i])
             if self.constraints(): break
 
     def g(self):
         sumtemp = 0
-        for j in range(self.M):
-            sumtemp += (self.x[j] - 0.5)**2 - math.cos(20*math.pi*(self.x[j] - 0.5))
+        for i in range(self.M):
+            sumtemp += (self.x[i] - 0.5)**2 - math.cos(20*math.pi*(self.x[i] - 0.5))
         return 100 * ( (self.K) + sumtemp )
         
     def getObjectives(self):
         f = []
-        prodtemp = 0.5* (1 + self.g())
-        
-        p = 1
-        for i in range(self.M): 
-            p *= self.x[i]
-        xterm = p
-        print "#######xterm",p
-        
-        p=1
+        commonProd = 0.5* (1 + self.g())
         for i in range(self.M):
-            p *= self.x[self.M-1-i]
-            xterm = xterm/self.x[self.M-1-i]
-            if i == self.M-1 : 
-                p *= self.x[self.M-1-i]
-                print "$$$$$$$xterm",p
-
-            if i != 0:
-                x = (1 - self.x[self.M-1-i] )
-            else: 
-                x = 1
-            f.append(prodtemp * xterm * x)
+            xterm = 1
+            for x in self.x[:self.M-2-i]:
+                xterm=xterm*x
+            if i != 0 :
+                xterm=xterm*(1-self.x[self.M-1-i])  ##should be M-1-i
+            f.append(commonProd * xterm )
         return f
         
     def eval(self):
@@ -82,43 +69,37 @@ class DTLZ1(Model):
 class DTLZ3(Model):
     def __init__(self,m=2,n=4):
         self.objectives = self.M = m # No of objectives f[0]f[1],f[2],...,f[M-1]
-        self.decisions  = self.n = n # decision variables  
-        self.K = self.n + 1 - self.M  #n -> M + K -1
-        self.domainMin = [0]*self.n
-        self.domainMax = [1]*self.n
-        self.x=[0]*self.n
+        self.decisions  = self.N = n # decision variables  
+        self.K = self.N + 1 - self.M  #n -> M + K -1
+        self.domainMin = [0]*self.N
+        self.domainMax = [1]*self.N
+        self.x=[0]*self.N
         self.setDecisions()
         self.__name__ = 'DTLZ3'
         
     def setDecisions(self):
         while True:
-            for i in range(0,self.n):
+            for i in range(0,self.N):
                 self.x[i]=random.uniform(self.domainMin[i],self.domainMax[i])
             if self.constraints(): break
 
     def g(self):
         sumtemp = 0
-        for j in range(len(self.x)):
-            sumtemp += (self.x[j] - 0.5)**2 - math.cos(20*math.pi*(self.x[j] - 0.5))
+        for i in range(self.M):
+            sumtemp += (self.x[i] - 0.5)**2 - math.cos(20*math.pi*(self.x[i] - 0.5))
         return 100 * ( (self.K) + sumtemp )
         
     def getObjectives(self):
         f = []
-        prodtemp = (1 + self.g())
-        costerm = [ math.cos(self.x[i]*math.pi/2) for i in range(self.M)]
-        p = 1
-        for i in costerm[0:self.M-1]:
-            p *= i
-        cosprod = p
+        commonProd = (1 + self.g())
         
         for i in range(self.M):
-            cosprod =  cosprod/math.cos(self.x[self.M-1-i]*math.pi/2)
-            if i == self.M-1 : print "$$$$$$$cosprod3",cosprod
-            if i != 0:
-                x = math.sin(self.x[self.M-1-i]*math.pi/2)
-            else: 
-                x = 1
-            f.append(prodtemp * cosprod * x)
+            costerm = 1
+            for x in self.x[:self.M-2-i]:
+                costerm=costerm*math.cos(x*math.pi * 0.5)
+            if i != 0 :
+                costerm=costerm*math.sin(self.x[self.M-1-i] * math.pi * 0.5)  ##should be M-1-i
+            f.append(commonProd * costerm)
         return f
         
     def eval(self):
@@ -127,24 +108,24 @@ class DTLZ3(Model):
 class DTLZ5(Model):
     def __init__(self,m=2,n=4):
         self.objectives = self.M = m # No of objectives f[0]f[1],f[2],...,f[M-1]
-        self.decisions  = self.n = n # decision variables  
-        self.K = self.n + 1 - self.M  #n -> M + K -1
-        self.domainMin = [0]*self.n
-        self.domainMax = [1]*self.n
-        self.x=[0]*self.n
+        self.decisions  = self.N = n # decision variables  
+        self.K = self.N + 1 - self.M  #n -> M + K -1
+        self.domainMin = [0]*self.N
+        self.domainMax = [1]*self.N
+        self.x=[0]*self.N
         self.setDecisions()
         self.__name__ = 'DTLZ5'
         
     def setDecisions(self):
         while True:
-            for i in range(0,self.n):
+            for i in range(0,self.N):
                 self.x[i]=random.uniform(self.domainMin[i],self.domainMax[i])
             if self.constraints(): break
 
     def g(self):
         sumtemp = 0
-        for j in range(self.M):
-            sumtemp += (self.x[j] - 0.5)**2 
+        for i in range(self.M):
+            sumtemp += (self.x[i] - 0.5)**2 
         return ( sumtemp )
         
     def q(self,i):
@@ -154,22 +135,15 @@ class DTLZ5(Model):
         
     def getObjectives(self):
         f = []
-        prodtemp = (1 + self.g())
-        costerm = [ numpy.cos(self.q(i)*math.pi/2) for i in range(self.M)]
-        #cosprod = numpy.prod(costerm[0:self.M-1])
-        p = 1
-        for i in costerm[0:self.M-1]:
-            p *= i
-        cosprod = p
+        commonProd = (1 + self.g())
         
-        for i in range(self.M):
-            cosprod =  cosprod/numpy.cos(self.q(self.M-1-i)*math.pi/2)
-            if i == self.M-1 : print "$$$$$$$cosprod5",cosprod
-            if i != 0:
-                x = math.sin(self.q(self.M-1-i)*math.pi/2)
-            else: 
-                x = 1
-            f.append(prodtemp * cosprod * x)
+        for i in range(self.M ):
+            costerm = 1
+            for j in range(self.M-2-i):
+                costerm=costerm*math.cos(self.q(j) * math.pi * 0.5)
+            if i != 0 :
+                costerm=costerm*math.sin(self.q(self.M-1-i)* math.pi * 0.5)  ##should be M-1-i
+            f.append(commonProd * costerm)
         return f
         
     def eval(self):
@@ -178,17 +152,17 @@ class DTLZ5(Model):
 class DTLZ7(Model):
     def __init__(self,m=2,n=4):
         self.objectives = self.M = m # No of objectives f[0]f[1],f[2],...,f[M-1]
-        self.decisions  = self.n = n # decision variables  
-        self.K = self.n + 1 - self.M  #n -> M + K -1
-        self.domainMin = [0]*self.n
-        self.domainMax = [1]*self.n
-        self.x=[0]*self.n
+        self.decisions  = self.N = n # decision variables  
+        self.K = self.N + 1 - self.M  #n -> M + K -1
+        self.domainMin = [0]*self.N
+        self.domainMax = [1]*self.N
+        self.x=[0]*self.N
         self.setDecisions()
         self.__name__ = 'DTLZ7'
         
     def setDecisions(self):
         while True:
-            for i in range(0,self.n):
+            for i in range(0,self.N):
                 self.x[i]=random.uniform(self.domainMin[i],self.domainMax[i])
             if self.constraints(): break
 

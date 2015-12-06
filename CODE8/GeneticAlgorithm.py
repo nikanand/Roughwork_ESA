@@ -1,13 +1,10 @@
-#from __future__ import absolute_import, division
 import Model
 import math
 import random
 import copy
 import numpy
 import sk
-#import os
-#from PT import PrettyTable
-#from time import gmtime, strftime
+
 
 
 "As per Code 9-10 details"
@@ -60,19 +57,67 @@ def binaryDomination(model1, model2):
             return False # not better and not equal, therefor worse
     return bettered
     
+    
+def type1(model1, model2):
+    bettered = False
+    for i,(xi,yi) in enumerate(zip(model1.getObjectives(),model2.getObjectives())):
+        if lt(xi,yi):
+            bettered = True
+        elif (xi != yi):
+            print "bettered  FALSE"
+            return False # not better and not equal, therefor worse
+    if bettered:
+        print "bettered  TRUE"
+    else:
+        print "bettered  FALSE"
+    return bettered
+    
 "Update pereto frontier"
 
 def compete(pf_best,pf_new):
     tmp=[]
+    
+    for m in pf_best:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
+        print "###","onj=",m.getObjectives()
+        print "###","dec=",m.x
+        print "###","enf=",m.eval()
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
+    for m in pf_new:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
+        print "###","onj=",m.getObjectives()
+        print "###","dec=",m.x
+        print "###","enf=",m.eval()
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
+    
     for a in pf_new:
         for b in pf_best:
             if binaryDomination(a,b):
                 tmp.append(a)
                 pf_best.remove(b)
+    '''           
+    print "Points in Pareto Frontier tmp     = ", len(tmp)
+    for m in tmp:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TMP"
+        print "###","onj=",m.getObjectives()
+        print "###","dec=",m.x
+        print "###","enf=",m.eval()
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TMP"
+    
+    print "Points in Pareto Frontier pf_best = ", len(pf_best)
+    for m in pf_best:
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEST"
+        print "%%%%%k=","onj=",m.getObjectives()
+        print "%%%%%k=","dec=",m.x
+        print "%%%%%k=","enf=",m.eval()
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BEST"
+    '''  
     if tmp:
         pf_best.extend(tmp)
+        print "TMP TRUE"
         return True
     else:
+        print "TMP FALSE"
         return False
         
         
@@ -148,7 +193,16 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
         if flag:
             pf.append(cand1)
     pf_best=pf[:]
-    
+    print "##################Points in Pareto Frontier = ", len(pf_best)
+
+    '''
+    print "Points in Pareto Frontier = ", len(pf_best)
+    for m in pf_best:
+        print "%%%%%k=","onj=",m.getObjectives()
+        print "%%%%%k=","dec=",m.x
+        print "%%%%%k=","enf=",m.eval()
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    '''
     
     life=0
     for i in xrange(generations):
@@ -158,7 +212,7 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
             choose=numpy.random.choice(len(pf),2,replace=True)
             Parent1=pf[choose[0]]
             Parent2=pf[choose[1]]
-            child = crossover(child,Parent1,Parent2)
+            child = crossover(child,Parent1,Parent2) #"Genetically Crossover parents"
 
             if random.random()<mutation_rate*(2**life):
                 child.setDecisions() #Genetically mutate child
@@ -173,8 +227,33 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
                     break
             if flag:
                 pf_new.append(a)
-                
+        '''        
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%starting"
+        print "NUMBER Points in Pareto Frontier ORIG = ", len(pf_best)
+        for m in pf_best:
+            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
+            print "###","onj=",m.getObjectives()
+            print "###","dec=",m.x
+            print "###","enf=",m.eval()
+            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ORIG"
+        print "NUMBER Points in Pareto Frontier NEW= ", len(pf_new)
+        for m in pf_new:
+            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
+            print "###","onj=",m.getObjectives()
+            print "###","dec=",m.x
+            print "###","enf=",m.eval()
+            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%NEW"
+        '''
+        print "NI", len(pf_best)    
         change=compete(pf_best,pf_new)
+        print "KH", len(pf_best)  
+        '''
+        for m in pf_best:
+            print "%%%%%k=","onj=",m.getObjectives()
+            print "%%%%%k=","dec=",m.x
+            print "%%%%%k=","enf=",m.eval()
+            print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%UPDATE"
+        '''    
         if change:
             life=0
         else:
@@ -186,4 +265,11 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30):
         pf=pf_new
     
     solution = hypervolume(pf_best,min,max,10000)
+    '''
+    print "Points in Pareto Frontier = ", len(pf_best)
+    for m in pf_best:
+        print "%%%%%k=","onj=",m.getObjectives()
+        print "%%%%%k=","dec=",m.x
+        print "%%%%%k=","enf=",m.eval()
+    ''' 
     return pf_best,solution

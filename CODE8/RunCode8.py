@@ -31,7 +31,7 @@ if __name__ == '__main__':
                     i = 2
 
                 solution,enegry = Algorithm(model)
-                
+
                 print "------------------------------------------"
                 print "Model     : ",model.__name__
                 print "Algorithm : ",Algorithm.__name__

@@ -104,9 +104,9 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
             count+=1
             if count == 3:
                 count = 0
-                '''print xTable
+                print xTable
                 print fxTable
-                print eTable'''
+                print eTable
                 fo.write('DECISIONS\n')
                 fo.write( str(xTable) + '\n' )
                 fo.write('OBJECTIVES\n')
@@ -119,9 +119,9 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
                 fxTable = PrettyTable()
                 eTable  = PrettyTable()
         if count >0:            
-            '''print xTable
+            print xTable
             print fxTable
-            print eTable'''
+            print eTable
             fo.write( str(xTable) + '\n' )
             fo.write( str(fxTable) + '\n' )
             fo.write( str(eTable) + '\n' )
@@ -222,19 +222,14 @@ if __name__ == '__main__':
                         objList=[]
                         decList=[]
                         engList=[]
-                        '''
                         for m in paretoFront:
-                          objList.append(m.getObjectives())
-                          print "$$$$$k=",k,"onj=",m.getObjectives()
+                          objList.append(m.getObjectives()) 
                           decList.append(m.x)
-                          print "$$$$$k=",k,"dec=",m.x
                           engList.append(m.eval())
-                          print "$$$$$k=",k,"enf=",m.eval()
-                        '''  
                         PFobj.append(objList)
                         PFdec.append(decList)
                         PFeng.append(engList)
-                        print "!!!!!!"
+                        
                        
                         i += 1
                         perc +=1
@@ -248,7 +243,7 @@ if __name__ == '__main__':
                     print "List of Objectives in pareto Frontier =",PFobj
                     print "List of Energy in pareto Frontier =",PFeng
                         
-                    #CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
+                    CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
         ################################    
                     '''
                     ##Print data for this Decision/objective pair
