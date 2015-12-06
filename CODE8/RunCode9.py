@@ -120,16 +120,17 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
 
 
 if __name__ == '__main__':
-    '''
+    
     numOfIterations = 20
     numOfDecisions=[10,20,40]
     numOfObjectives=[2,4,6,8]
+    numOfModels = 4
     '''
     numOfIterations = 2
     numOfDecisions=[10]
     numOfObjectives=[4,2]
-    
     numOfModels = 2
+    '''
     rdivlength = len(numOfDecisions) * len(numOfObjectives) * numOfModels
     print rdivlength
     rdivInput = [[] for i in range(rdivlength)]
@@ -140,7 +141,8 @@ if __name__ == '__main__':
     fname = "./data/CODE9_output_dump.log"
     ouputRawFile = open(fname, "wb") 
     
-    for model in [DTLZ7,DTLZ1]:
+    #for model in [DTLZ7,DTLZ1]:
+    for model in [DTLZ1,DTLZ3,DTLZ5,DTLZ7]:
         
         ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
         mod = ( "Model    : %s " %model.__name__)
@@ -205,7 +207,7 @@ if __name__ == '__main__':
 
                     CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives)
                     #################
-                    ID = (model.__name__+' '+str(decisions)+'Dec '+str(objectives)+' Objs') 
+                    ID = (model.__name__+' '+str(decisions)+'-Decisions '+str(objectives)+'-Objectives') 
 
                     rdivInput[rdivIndex].append(ID)
                     for each in HV:
