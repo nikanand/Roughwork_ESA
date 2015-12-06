@@ -85,18 +85,13 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
         fo.write('```````````````````````````````````````````````````````````````\n')
         fo.write('_______________________________________________________________\n')
         fo.write('ITERATION = '+str(i+1)+'\n')
-        print "!!!!!!!!!!!!!!!"
-        print 'ITERATION = '+str(i+1)+'\n'
-        print PF[i]
-        print "!!!!!!!!!!!!!!!"
 
         for j in  range(len(PF[i])):
-            print "$$$$$$$$$$"
-            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Des, x   '
+            heading = 'Desisions, x     [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] '
             xTable.add_column(heading,PF[i][j].x)
-            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Obj, f(x)'
+            heading = 'Objectives, f(x) [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
             fxTable.add_column(heading,PF[i][j].getObjectives())
-            heading = '[ITERATION='+str(i+1)+'] [PF:'+str(j+1)+'] Energy   '
+            heading = ' Energy          [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
             val = [repr(PF[i][j].eval())]
             eTable.add_column(heading,val)
             #heading = 'ITERATION: '+str(i+1)+' PF: '+str(j+1)+' Energy'
@@ -104,9 +99,9 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
             count+=1
             if count == 3:
                 count = 0
-                '''print xTable
+                print xTable
                 print fxTable
-                print eTable'''
+                print eTable
                 fo.write('DECISIONS\n')
                 fo.write( str(xTable) + '\n' )
                 fo.write('OBJECTIVES\n')
@@ -114,14 +109,13 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
                 fo.write('ENERGY\n')
                 fo.write( str(eTable) + '\n' )
 
-                #print eTable
                 xTable  = PrettyTable()
                 fxTable = PrettyTable()
                 eTable  = PrettyTable()
         if count >0:            
-            '''print xTable
+            print xTable
             print fxTable
-            print eTable'''
+            print eTable
             fo.write( str(xTable) + '\n' )
             fo.write( str(fxTable) + '\n' )
             fo.write( str(eTable) + '\n' )
