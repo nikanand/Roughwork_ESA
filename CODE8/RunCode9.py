@@ -136,7 +136,6 @@ if __name__ == '__main__':
     rdivInput = [[] for i in range(rdivlength)]
     rdivIndex = 0
     
-    HyperCollection={}
     TotalRounds = len(numOfDecisions) * len(numOfObjectives) * numOfIterations
     fname = "./data/CODE9_output_dump.log"
     ouputRawFile = open(fname, "wb") 
@@ -147,7 +146,6 @@ if __name__ == '__main__':
         ouputRawFile.write( '|||||||||||||||||||||||||||||||||||||||||||||\n' )
         mod = ( "Model    : %s " %model.__name__)
         ouputRawFile.write(mod+'\n')
-        HyperCollection[model.__name__]={}
         for Algorithm in [ga]:
             algo = ("Algorithm: %s " %Algorithm.__name__)
             ouputRawFile.write(algo)

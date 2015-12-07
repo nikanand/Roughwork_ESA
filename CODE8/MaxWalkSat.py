@@ -30,7 +30,7 @@ def MaxWalkSat(model):
                 previousEra.append([])
         for j in range(0,maxchanges):
             eval+=1
-            if s.eval()<threshold and len(previousEra1) == eraLength:
+            if s.eval()<threshold:# and len(previousEra1) == eraLength:
                 return sbest.x,sbest.eval()
 
             which=random.randint(0,s.decisions-1)
