@@ -69,6 +69,8 @@ def updateParetoFrontier(bestPF,newPF,lives):
     tmpCandList=[]
     for cand1 in newPF:
         for cand2 in bestPF:
+            #print "cand1.fx",cand1.fx
+            #print "cand2.fx",cand2.fx
             lives+=type2(cand2.fx,cand1.fx)
             if lives == 0:
                 return lives
@@ -143,7 +145,8 @@ def hypervolume(paretoFront,min,max,sample=10000):
 
 "Start of GA"
 def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,generations=1000,mutationRate=0.05,lives=5):
-    
+    print "Start of GA"
+    print "someSeed=",someSeed
     random.seed(someSeed)
     min,max=baseline(model,decisions=decisions,objectives=objectives,num=10000)
 
