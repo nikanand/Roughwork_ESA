@@ -134,19 +134,30 @@ def hypervolume(paretoFront,min,max,sample=10000):
 
     for i in xrange(sample):
         someObjectives = []
-        for i in xrange(m):
-            someObjectives.append(random.uniform(min[i],max[i]))
+
+        for j in xrange(m):
+            xyz = random.uniform(min[j],max[j])
+            someObjectives.append(xyz)
+
 
         for pfPoint in paretoFront:
+
             if Dominates(pfPoint,someObjectives):
                  count=count+1
-
+                 break
+        
+        #print "Num=",count  
+        #print "DEM=",i
+        
+    #print "HV is        == ",float(count/(sample))   
+    #print "HV should be ==",float(gen * 100 - len(paretoFront)) / (gen * 100)
+    
     return float(count/(sample))
 
 "Start of GA"
 def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,generations=1000,mutationRate=0.05,lives=5):
-    print "Start of GA"
-    print "someSeed=",someSeed
+    #print "Start of GA"
+    #print "someSeed=",someSeed
     random.seed(someSeed)
     min,max=baseline(model,decisions=decisions,objectives=objectives,num=10000)
 
@@ -163,7 +174,7 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
         if flag:
             PF.append(cand1)
     bestPF=PF[:]
-    print "lives = ",lives,
+    #print "lives = ",lives,
     for i in xrange(generations):
         
         newCandidateList=[]
@@ -191,7 +202,7 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
                 newPF.append(cand1)
 
         lives=updateParetoFrontier(bestPF,newPF,lives)
-        print "... ",lives,
+        #print "... ",lives,
         if lives == 0:
             lives = 5
             break
@@ -199,7 +210,7 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
         listOfCandidates=newCandidateList
         pf=newPF
         #print "pf count = ",len(pf)
-    print "DONE"
+    #print "DONE"
     HyperVolume = hypervolume(bestPF,min,max,10000)
     
     return bestPF,HyperVolume

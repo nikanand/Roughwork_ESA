@@ -16,6 +16,8 @@ mutationRate=0.05
 lives=5
 '''
 
+gen = 1
+
 "Run Baseline"
 def baseline(model,decisions=10,objectives=2,num=10000):
     #print"model :",model.__name__
@@ -69,8 +71,8 @@ def updateParetoFrontier(bestPF,newPF,lives):
     tmpCandList=[]
     for cand1 in newPF:
         for cand2 in bestPF:
-            print "cand1.fx",cand1.fx
-            print "cand2.fx",cand2.fx
+            #print "cand1.fx",cand1.fx
+            #print "cand2.fx",cand2.fx
             lives+=type2(cand2.fx,cand1.fx)
             if lives == 0:
                 return lives
@@ -134,19 +136,35 @@ def hypervolume(paretoFront,min,max,sample=10000):
 
     for i in xrange(sample):
         someObjectives = []
-        for i in xrange(m):
-            someObjectives.append(random.uniform(min[i],max[i]))
+        
+        #print "\nmin    :",min
+        #print "max    :",max
+        for j in xrange(m):
+            xyz = random.uniform(min[j],max[j])
+            #print "xyz =",xyz
+            someObjectives.append(xyz)
+        #print "someobj len=",len(someObjectives)
+        #print "points in PF",len(paretoFront)
 
         for pfPoint in paretoFront:
+            #print "someobj:",someObjectives
+            #print "pfPoint:",pfPoint.fx
             if Dominates(pfPoint,someObjectives):
                  count=count+1
-
+                 break
+        
+        #print "Num=",count  
+        #print "DEM=",i
+        
+    #print "HV is        == ",float(count/(sample))   
+    #print "HV should be ==",float(gen * 100 - len(paretoFront)) / (gen * 100)
+    
     return float(count/(sample))
 
 "Start of GA"
 def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,generations=1000,mutationRate=0.05,lives=5):
-    print "Start of GA"
-    print "someSeed=",someSeed
+    #print "Start of GA"
+    #print "someSeed=",someSeed
     random.seed(someSeed)
     min,max=baseline(model,decisions=decisions,objectives=objectives,num=10000)
 
@@ -163,7 +181,8 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
         if flag:
             PF.append(cand1)
     bestPF=PF[:]
-    print "lives = ",lives,
+    #print "lives = ",lives,
+    gen = 1
     for i in xrange(generations):
         
         newCandidateList=[]
@@ -191,15 +210,16 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
                 newPF.append(cand1)
 
         lives=updateParetoFrontier(bestPF,newPF,lives)
-        print "... ",lives,
+        #print "... ",lives,
         if lives == 0:
             lives = 5
+            gen +=1
             break
 
         listOfCandidates=newCandidateList
         pf=newPF
         #print "pf count = ",len(pf)
-    print "DONE"
+    #print "DONE"
     HyperVolume = hypervolume(bestPF,min,max,10000)
     
     return bestPF,HyperVolume

@@ -30,7 +30,7 @@ if __name__ == '__main__':
     rdivInput = [[],[]]
     rdivIndex = 0
     
-    fname = ('./data/CODE10_output_Dump.log')
+    fname = ('./data/CODE10_DTLZ_RESULTS.log')
     fo = open(fname, "wb")
     
     for model in [DTLZ1,DTLZ3,DTLZ5,DTLZ7]:
@@ -66,9 +66,9 @@ if __name__ == '__main__':
                 PF =[]
                 tunedHV=[]
                 tunedPF=[]
-                print "iteration....",
+                #print "iteration....",
                 for k in xrange(numOfIterations):
-                    print k
+                    #print k
                     DifferentSeeds=random.randint(0,10000)
                          
                     paretoFront,HyperVolume=ga(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds,candidates=100,generations=1000,mutationRate=0.05,lives=5)

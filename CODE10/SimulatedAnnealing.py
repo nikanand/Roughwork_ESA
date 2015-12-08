@@ -3,7 +3,7 @@ import math
 import random
 import copy
 import sk
-import loss
+#import loss
 
 def SimulatedAnnealing(model):
     # print "Model: ",model.__name__
