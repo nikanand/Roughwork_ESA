@@ -160,9 +160,9 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
         if flag:
             PF.append(cand1)
     bestPF=PF[:]
-    
-    life=0
+    print "lives = ",lives,
     for i in xrange(generations):
+        
         newCandidateList=[]
         for j in xrange(candidates):
             child=model(objectives,decisions)
@@ -188,13 +188,15 @@ def GeneticAlgorithm(model,decisions=4,objectives=2,someSeed=30,candidates=100,g
                 newPF.append(cand1)
 
         lives=updateParetoFrontier(bestPF,newPF,lives)
-    
+        print "... ",lives,
         if lives == 0:
             lives = 5
             break
 
         listOfCandidates=newCandidateList
         pf=newPF
-
+        #print "pf count = ",len(pf)
+    print "DONE"
     HyperVolume = hypervolume(bestPF,min,max,10000)
+    
     return bestPF,HyperVolume

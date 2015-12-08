@@ -27,8 +27,8 @@ def deTuner(model,what,decisions,objectives):
     candidates=[best]
     ###$print "First Candidate Value:",candidates[0].x
     
-    for i in range(1,NumCandidates+1):
-        ###$print "\nCANDIDATE NUMBER: ",i
+    for i in range(1,NumCandidates):
+        print "\nCANDIDATE NUMBER: ",i
         candidate=model(what,decisions,objectives)
         candidates.append(candidate)
         ###$print "candidate is",candidate.__name__
@@ -42,7 +42,8 @@ def deTuner(model,what,decisions,objectives):
     def mutate(candidates,F,CR,best):
         ###$print "length:::",len(candidates)
         for i in range(len(candidates)):
-            ###$print "i = ",i
+            print "Len::",len(candidates)
+            print "i = ",i
             tmp=range(len(candidates))
             tmp.remove(i)
             while True:
@@ -53,9 +54,9 @@ def deTuner(model,what,decisions,objectives):
                 Z = candidates[choice[2]]
                 
                 old=candidates[i]
-                ####$print "~~~~old",old.x
+                print "~~~~old",old.x
                 r=random.randint(0,old.decisions-1)
-                ###$print"@@@@@@"
+                print"@@@@@@"
                 new=model(what,decisions,objectives)
                 
                 for j in range(old.decisions):
@@ -63,13 +64,15 @@ def deTuner(model,what,decisions,objectives):
                         new.x[j]=int(round(X.x[j] + F*(Y.x[j] - Z.x[j])))  #Mutate: X + F*(Y - Z)
                     else:
                         new.x[j]=old.x[j]
-                if new.constraints(): break
+                if new.constraints(): 
+                    print "Breaking..."
+                    break
             
-            ###$print "\n------------"
+            print "\n------------"
             a = new.eval()
             b = best.eval()
             c = old.eval()
-            ###$print "\n------------"
+            print "\n------------"
 
             if a<b:
                 best=copy.deepcopy(new)
@@ -88,10 +91,8 @@ def deTuner(model,what,decisions,objectives):
             yield new,best
 
     for tries in range(maxtries):
-        ###$print "\nTry: ",tries+1
-        #printList = []
-        ####$print "Try %02d"%(tries+1),
-        ####$print "|",
+        print "\nTry: ",tries+1
+
         newcandidates = []
         for new,best in mutate(candidates,F,CR,best):
             newcandidates.append(new)

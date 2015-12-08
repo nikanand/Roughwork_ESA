@@ -73,12 +73,13 @@ if __name__ == '__main__':
                 PF =[]
                 tunedHV=[]
                 tunedPF=[]
-                print "iteration....",
+                #print "Iteration...."
                 for k in xrange(numOfIterations):
                     print k,
                     DifferentSeeds=random.randint(0,10000)
                          
                     paretoFront,HyperVolume=ga(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds,candidates=100,generations=1000,mutationRate=0.05,lives=5)
+                    #print " START TUNED ONE...................."
                     tunedPF,tunedHyperVolume=ga(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds,candidates=TunedCandidates,generations=1000,mutationRate=TunedMutationRate,lives=TunedLives)
 
                     HV.append(HyperVolume)
@@ -86,6 +87,7 @@ if __name__ == '__main__':
                     tunedHV.append(tunedHyperVolume)
                     tunedPF.append(tunedPF)
                     i += 1
+                    #print k," ITERATIONs DONE...................."
 
                 #Print data for this Decision/objective pair
                 print ""

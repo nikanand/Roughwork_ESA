@@ -75,46 +75,7 @@ def CreateOuputFile(Algorithm,model,HV,PF,decisions,objectives):
     xTable  = PrettyTable()
     fxTable = PrettyTable()
     eTable  = PrettyTable()
-    '''
-    count = 0
-    for i in range(len(PF)):
-        fo.write('---------------------------------------------------------------------------------------------------------\n')
-        fo.write('ITERATION = '+str(i+1)+'\n')
-        fo.write('---------------------------------------------------------------------------------------------------------\n')
-
-        for j in  range(len(PF[i])):
-            heading = 'Dec, x    [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
-            xTable.add_column(heading,PF[i][j].x)
-            heading = 'Obj, f(x) [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
-            fxTable.add_column(heading,PF[i][j].fx)
-            heading = ' Energy   [ITERATION='+str(i+1)+'] [PF:'+str(j+1)+']'
-            val = [repr(PF[i][j].eval())]
-            eTable.add_column(heading,val)
-            count+=1
-            if count == 3:
-                count = 0
-                #print xTable
-                #print fxTable
-                #print eTable
-                fo.write('DECISIONS\n')
-                fo.write( str(xTable) + '\n' )
-                fo.write('OBJECTIVES\n')
-                fo.write( str(fxTable) + '\n' )
-                fo.write('ENERGY\n')
-                fo.write( str(eTable) + '\n' )
-                fo.write('\n#########################################################################################################\n')
-
-                xTable  = PrettyTable()
-                fxTable = PrettyTable()
-                eTable  = PrettyTable()
-        if count >0:            
-            #print xTable
-            #print fxTable
-            #print eTable
-            fo.write( str(xTable) + '\n' )
-            fo.write( str(fxTable) + '\n' )
-            fo.write( str(eTable) + '\n' )
-    '''
+    
     fo.close()  # Close opend file
     ##############################
 
@@ -132,7 +93,7 @@ if __name__ == '__main__':
     numOfModels = 2
     '''
     rdivlength = len(numOfDecisions) * len(numOfObjectives) * numOfModels
-    print rdivlength
+    #print rdivlength
     rdivInput = [[] for i in range(rdivlength)]
     rdivIndex = 0
     
@@ -180,9 +141,12 @@ if __name__ == '__main__':
                         ouputRawFile.write( '================================\n' ) 
                         stime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                         ouputRawFile.write( 'ITERATION NUMBER = ' + repr(i) + '\n' )
+                        print "ITERATION:",k," Start Time:", strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
                         DifferentSeeds=random.randint(0,10000)
-                         
+                        print "DifferentSeeds:",DifferentSeeds
+                        print "decisions",decisions
+                        print "objectives",objectives
                         paretoFront,HyperVolume=Algorithm(model,decisions=decisions,objectives=objectives,someSeed=DifferentSeeds)
                         Dumpfile(paretoFront,stime)
                         ouputRawFile.write( '================================\n' ) 
